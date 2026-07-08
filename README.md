@@ -20,3 +20,5 @@ and Friday.
 ---
 
 *Not financial advice. For educational purposes only.*
+
+<meta name="fo-verify" content="0cdfc257-0623-4119-9310-3164aaa92e14" />
