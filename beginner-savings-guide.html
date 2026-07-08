@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginner Savings Account Guide — Sprout Money</title>
+<style>
+  :root {
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --cream: #FAFAF6;
+    --charcoal: #2C2C2A;
+    --muted: #6B6B68;
+    --border: #E4E2D9;
+    --white: #FFFFFF;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--cream); color: var(--charcoal); }
+
+  header { background: var(--green); color: white; padding: 2rem 1.5rem 1.5rem; text-align: center; }
+  .logo { font-size: 13px; letter-spacing: .08em; opacity: .7; margin-bottom: 6px; text-transform: uppercase; }
+  header h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  header p { font-size: 14px; opacity: .8; max-width: 440px; margin: 0 auto; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .intro-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .intro-card p { font-size: 14px; line-height: 1.7; color: var(--charcoal); }
+  .intro-card p + p { margin-top: 10px; }
+
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 1.5rem 0 .75rem; }
+
+  .type-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1rem; }
+  .type-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .type-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .type-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .type-meta { flex: 1; }
+  .type-name { font-size: 15px; font-weight: 700; color: var(--charcoal); margin-bottom: 2px; }
+  .type-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-amber { background: var(--amber-light); color: var(--amber); }
+  .type-body { font-size: 13px; color: var(--charcoal); line-height: 1.6; margin-bottom: 12px; }
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pc-col h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .pros h4 { color: var(--green); }
+  .cons h4 { color: var(--coral); }
+  .pc-item { font-size: 12px; color: var(--muted); margin-bottom: 4px; display: flex; gap: 6px; line-height: 1.4; }
+  .pc-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--coral); }
+  .best-for { margin-top: 10px; padding: 8px 10px; background: var(--cream); border-radius: 6px; font-size: 12px; color: var(--muted); border-left: 3px solid var(--green); }
+  .best-for strong { color: var(--charcoal); }
+
+  .quiz-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .quiz-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+  .quiz-q { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--charcoal); }
+  .quiz-options { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .quiz-opt {
+    padding: 7px 14px; border: 0.5px solid var(--border); border-radius: 20px;
+    font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer;
+    background: var(--white); transition: all .15s;
+  }
+  .quiz-opt.selected { background: var(--green); color: white; border-color: var(--green); }
+  .quiz-result { background: var(--green-light); border: 0.5px solid #A0C968; border-radius: 10px; padding: 1rem; display: none; }
+  .quiz-result.show { display: block; }
+  .quiz-result h4 { font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+  .quiz-result p { font-size: 13px; color: var(--charcoal); line-height: 1.6; }
+
+  .checklist-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .checklist-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .check-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--border); cursor: pointer; }
+  .check-item:last-child { border-bottom: none; }
+  .check-box { width: 18px; height: 18px; border: 1.5px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .check-box.checked { background: var(--green); border-color: var(--green); }
+  .check-box.checked::after { content: '✓'; color: white; font-size: 11px; font-weight: 700; }
+  .check-text { font-size: 13px; color: var(--charcoal); line-height: 1.5; }
+  .check-text .check-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .red-flags { background: var(--coral-light); border: 0.5px solid #F0997B; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .red-flags h3 { font-size: 14px; font-weight: 700; color: var(--coral); margin-bottom: 10px; }
+  .flag-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--charcoal); line-height: 1.5; }
+  .flag-item:last-child { margin-bottom: 0; }
+  .flag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); margin-top: 7px; flex-shrink: 0; }
+
+  .disclaimer { background: var(--amber-light); border: 0.5px solid #EFC47A; border-radius: 10px; padding: 1rem; margin-top: 1.25rem; font-size: 12px; color: var(--charcoal); line-height: 1.6; }
+  .disclaimer strong { color: var(--amber); }
+
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 1.5rem; }
+  .footer-note a { color: var(--green); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌱 Sprout Money</div>
+  <h1>Beginner Savings Account Guide</h1>
+  <p>What to look for, what to avoid, and how to find the right account for where you are right now.</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-card">
+    <p>Not all savings accounts are the same. Some pay you almost nothing to hold your money. Others lock it away when you might need it. A few are genuinely worth using.</p>
+    <p>This guide explains the four main types of savings accounts, helps you figure out which one fits your situation, and gives you a checklist of exactly what to look for — and what to avoid.</p>
+  </div>
+
+  <div class="section-label">The 4 types of savings accounts</div>
+
+  <div class="type-grid">
+
+    <div class="type-card">
+      <div class="type-head">
+        <div class="type-icon" style="background:var(--green-light)">💰</div>
+        <div class="type-meta">
+          <div class="type-name">Easy-access savings account</div>
+          <span class="type-tag tag-green">Best for emergency funds</span>
+        </div>
+      </div>
+      <div class="type-body">Money goes in, money comes out — whenever you want, with no penalty. Usually offered by your bank or a dedicated savings provider. Interest rates vary widely, so shopping around matters here more than anywhere else.</div>
+      <div class="pros-cons">
+        <div class="pc-col pros">
+          <h4>Works for you</h4>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Withdraw anytime</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>No minimum term</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Often protected by deposit guarantee</span></div>
+        </div>
+        <div class="pc-col cons">
+          <h4>Watch out for</h4>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Rates can drop without much notice</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Introductory rates expire</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Too accessible can mean too easy to spend</span></div>
+        </div>
+      </div>
+      <div class="best-for"><strong>Best for:</strong> Emergency fund. Keep 3–6 months of expenses here. Accessible when you need it, earning something while you don't.</div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-head">
+        <div class="type-icon" style="background:var(--blue-light)">📅</div>
+        <div class="type-meta">
+          <div class="type-name">Notice savings account</div>
+          <span class="type-tag tag-blue">Higher rate, slightly less flexible</span>
+        </div>
+      </div>
+      <div class="type-body">You can withdraw, but you give the bank notice first — usually 30, 60, or 90 days. In return, you usually get a better interest rate than an easy-access account. A good middle ground if you won't need the money immediately but don't want it fully locked away.</div>
+      <div class="pros-cons">
+        <div class="pc-col pros">
+          <h4>Works for you</h4>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Better rate than easy-access</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Adds a friction layer — less temptation</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Money still reachable when needed</span></div>
+        </div>
+        <div class="pc-col cons">
+          <h4>Watch out for</h4>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Not ideal if you need fast access</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Some have minimum balance requirements</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Early withdrawal penalties sometimes apply</span></div>
+        </div>
+      </div>
+      <div class="best-for"><strong>Best for:</strong> Savings beyond your emergency fund. Medium-term goals like a car, a deposit, or a holiday — money you're serious about not touching.</div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-head">
+        <div class="type-icon" style="background:var(--purple-light)">🔒</div>
+        <div class="type-meta">
+          <div class="type-name">Fixed-term savings account</div>
+          <span class="type-tag tag-purple">Best rate, fully locked in</span>
+        </div>
+      </div>
+      <div class="type-body">You lock your money away for a set period — usually 6 months to 5 years — and get a guaranteed, fixed interest rate for the whole term. The longer you lock it in, the higher the rate tends to be. Your money is completely inaccessible until the term ends.</div>
+      <div class="pros-cons">
+        <div class="pc-col pros">
+          <h4>Works for you</h4>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Highest interest rates available</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Guaranteed return — no rate drops</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Forces you to leave money alone</span></div>
+        </div>
+        <div class="pc-col cons">
+          <h4>Watch out for</h4>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Money is fully inaccessible until term ends</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>If rates rise, you miss out</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Never use this for emergency savings</span></div>
+        </div>
+      </div>
+      <div class="best-for"><strong>Best for:</strong> Money you definitely won't need for 1–5 years. Only use this once your emergency fund is fully built.</div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-head">
+        <div class="type-icon" style="background:var(--amber-light)">🏛️</div>
+        <div class="type-meta">
+          <div class="type-name">High-yield savings account (HYSA)</div>
+          <span class="type-tag tag-amber">Easy access + better-than-average rate</span>
+        </div>
+      </div>
+      <div class="type-body">Usually offered by online-only banks and fintech providers (like Revolut Savings, N26, or dedicated savings apps). They offer easy-access flexibility but significantly higher rates than traditional banks — because they have lower overheads. Worth checking the deposit guarantee rules for your country.</div>
+      <div class="pros-cons">
+        <div class="pc-col pros">
+          <h4>Works for you</h4>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Much better rates than traditional banks</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Usually easy to open — no branch visit</span></div>
+          <div class="pc-item"><div class="pc-dot dot-green"></div><span>Flexible access</span></div>
+        </div>
+        <div class="pc-col cons">
+          <h4>Watch out for</h4>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Rates are variable — check regularly</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Check deposit protection rules carefully</span></div>
+          <div class="pc-item"><div class="pc-dot dot-red"></div><span>Some require minimum monthly deposits</span></div>
+        </div>
+      </div>
+      <div class="best-for"><strong>Best for:</strong> Emergency fund and short-term savings where you want the best rate without giving up access. Compare rates every 6 months — they change often.</div>
+    </div>
+
+  </div>
+
+  <div class="section-label">Which account fits you right now?</div>
+
+  <div class="quiz-card">
+    <h3>Answer 2 quick questions</h3>
+
+    <div class="quiz-q">1. Do you have a fully-built emergency fund yet?</div>
+    <div class="quiz-options" id="q1">
+      <button class="quiz-opt" data-val="no" onclick="selectOpt('q1',this)">No, not yet</button>
+      <button class="quiz-opt" data-val="partial" onclick="selectOpt('q1',this)">Building it</button>
+      <button class="quiz-opt" data-val="yes" onclick="selectOpt('q1',this)">Yes, fully built</button>
+    </div>
+
+    <div class="quiz-q">2. When might you need this money?</div>
+    <div class="quiz-options" id="q2">
+      <button class="quiz-opt" data-val="anytime" onclick="selectOpt('q2',this)">Could be anytime</button>
+      <button class="quiz-opt" data-val="1year" onclick="selectOpt('q2',this)">In 1–2 years</button>
+      <button class="quiz-opt" data-val="3plus" onclick="selectOpt('q2',this)">3+ years away</button>
+    </div>
+
+    <div class="quiz-result" id="quiz-result">
+      <h4 id="quiz-rec-title">Our recommendation</h4>
+      <p id="quiz-rec-body"></p>
+    </div>
+  </div>
+
+  <div class="section-label">What to check before opening any savings account</div>
+
+  <div class="checklist-card">
+    <h3>Your savings account checklist</h3>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Is the interest rate competitive for this account type?
+        <div class="check-note">Compare with at least 2–3 alternatives. Even 0.5% difference adds up over a year.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Is the rate introductory or ongoing?
+        <div class="check-note">Many banks offer high rates for 3–6 months, then drop sharply. Know when it expires.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Is my money protected by a deposit guarantee scheme?
+        <div class="check-note">In the EU, up to €100,000 per person per institution is protected. Check your provider qualifies.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Are there any monthly fees or minimum balance requirements?
+        <div class="check-note">Some accounts charge fees that wipe out your interest. Check the fine print.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Can I access my money when I actually need it?
+        <div class="check-note">Match the account type to your timeline. Emergency fund = easy access only.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Is the account separate from my main current account?
+        <div class="check-note">Out of sight, out of mind. A separate account reduces the temptation to dip in.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">
+        Can I set up an automatic monthly transfer?
+        <div class="check-note">Automation is the single most effective savings habit. Set it on payday and forget it.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="red-flags">
+    <h3>Red flags to avoid</h3>
+    <div class="flag-item"><div class="flag-dot"></div><span>Any account offering returns that seem significantly higher than the market — if it sounds too good, it probably isn't a savings account.</span></div>
+    <div class="flag-item"><div class="flag-dot"></div><span>Providers not covered by a deposit protection scheme — always verify before depositing more than you can afford to lose.</span></div>
+    <div class="flag-item"><div class="flag-dot"></div><span>Accounts with hidden fees buried in terms and conditions — read the fee schedule before opening anything.</span></div>
+    <div class="flag-item"><div class="flag-dot"></div><span>Introductory rates with automatic roll-over onto much lower rates — set a reminder to review 1 month before any introductory period ends.</span></div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Important:</strong> This guide is for educational purposes only and does not constitute financial advice. Interest rates, account features, and deposit protection rules change frequently and vary by country. Always verify current rates directly with the provider and consider speaking with a qualified financial adviser for decisions that are significant for your situation.
+  </div>
+
+  <div class="footer-note">
+    Made by <a href="#">Sprout Money</a> · No data stored · Not financial advice
+  </div>
+
+</div>
+
+<script>
+const answers = { q1: null, q2: null };
+
+const results = {
+  'no-anytime':   { title: 'Easy-access savings account', body: 'Your priority right now is building your emergency fund. You need money that\'s safe, earning something, and available immediately if life throws a curveball. Start with an easy-access high-yield savings account. Open one today, set up a monthly automatic transfer, and build to 3–6 months of expenses before thinking about anything else.' },
+  'no-1year':     { title: 'Easy-access savings account', body: 'Until your emergency fund is built, keep everything in easy-access savings. Once it\'s fully funded, you can move additional savings into a notice account for the extra rate. Don\'t lock money away before you have a safety net.' },
+  'no-3plus':     { title: 'Easy-access savings account first', body: 'Even if your goal is years away, your first job is building an emergency fund in an easy-access account. Once that\'s done (3–6 months of expenses), you can explore fixed-term or notice accounts for the longer-term savings.' },
+  'partial-anytime': { title: 'Easy-access or high-yield savings account', body: 'Keep building that emergency fund in an accessible, decent-rate account. A high-yield savings account (HYSA) gives you the best of both: flexibility and a competitive rate. Don\'t lock anything away until the emergency fund is complete.' },
+  'partial-1year':   { title: 'High-yield savings account (HYSA)', body: 'A HYSA gives you a competitive rate without locking your money away — ideal while you\'re still building your emergency fund. Once it\'s complete, consider a notice account for any additional savings earmarked for your 1–2 year goal.' },
+  'partial-3plus':   { title: 'HYSA for now, fixed-term later', body: 'Finish building your emergency fund in an easy-access or HYSA. Once it\'s complete, the savings for your 3+ year goal can go into a fixed-term account for a significantly better rate — but only when you\'re sure you won\'t need that money.' },
+  'yes-anytime':  { title: 'High-yield savings account (HYSA)', body: 'Your emergency fund is built — great work. Keep it in an easy-access HYSA so it\'s earning something without being locked away. Any additional savings can stay flexible too, since you don\'t have a fixed timeline.' },
+  'yes-1year':    { title: 'Notice savings account', body: 'With your emergency fund secure and a 1–2 year goal in mind, a notice savings account is a smart move. Better rate than easy-access, and the 30–90 day notice period adds a useful friction layer. Compare at least 3 providers before opening.' },
+  'yes-3plus':    { title: 'Fixed-term savings account', body: 'Your emergency fund is built and your goal is 3+ years away — this is exactly the right profile for a fixed-term account. Lock in a guaranteed rate, set it and forget it, and let compounding do its work. Compare 1, 2, and 3-year terms to find the sweet spot.' }
+};
+
+function selectOpt(qid, btn) {
+  document.querySelectorAll(`#${qid} .quiz-opt`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[qid] = btn.dataset.val;
+  showResult();
+}
+
+function showResult() {
+  if (!answers.q1 || !answers.q2) return;
+  const key = answers.q1 + '-' + answers.q2;
+  const res = results[key];
+  if (!res) return;
+  const el = document.getElementById('quiz-result');
+  document.getElementById('quiz-rec-title').textContent = 'Recommended: ' + res.title;
+  document.getElementById('quiz-rec-body').textContent = res.body;
+  el.classList.add('show');
+}
+
+function toggleCheck(item) {
+  const box = item.querySelector('.check-box');
+  box.classList.toggle('checked');
+}
+</script>
+</body>
+</html>

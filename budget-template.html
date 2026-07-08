@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50/30/20 Budget Template — Sprout Money</title>
+<style>
+  :root {
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --cream: #FAFAF6;
+    --charcoal: #2C2C2A;
+    --muted: #6B6B68;
+    --border: #E4E2D9;
+    --white: #FFFFFF;
+    --needs-col: #185FA5;
+    --needs-light: #E6F1FB;
+    --wants-col: #854F0B;
+    --savings-col: #3B6D11;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    padding: 0;
+  }
+  header {
+    background: var(--green);
+    color: white;
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .logo { font-size: 13px; letter-spacing: .08em; opacity: .7; margin-bottom: 6px; text-transform: uppercase; }
+  header h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  header p { font-size: 14px; opacity: .8; max-width: 420px; margin: 0 auto; }
+  .container { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .income-card {
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .income-card label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 8px; }
+  .income-input-row { display: flex; align-items: center; gap: 8px; }
+  .currency { font-size: 22px; font-weight: 500; color: var(--green); }
+  .income-input-row input[type="number"] {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--charcoal);
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+  .income-input-row input::-webkit-outer-spin-button,
+  .income-input-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .income-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  .bar-visual {
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .bar-label-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .bar-label { font-size: 12px; font-weight: 600; }
+  .bar-track { height: 10px; border-radius: 5px; background: var(--border); overflow: hidden; display: flex; }
+  .bar-seg { height: 100%; transition: width .4s ease; }
+  .bar-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+  .bar-leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .bar-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin: 1.25rem 0 .6rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .badge-needs { background: var(--needs-light); color: var(--needs-col); }
+  .badge-wants { background: var(--amber-light); color: var(--wants-col); }
+  .badge-savings { background: var(--green-light); color: var(--savings-col); }
+
+  .alloc-card {
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 6px;
+  }
+  .alloc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .alloc-name { font-size: 13px; font-weight: 600; color: var(--charcoal); }
+  .alloc-amount { font-size: 18px; font-weight: 700; }
+  .alloc-pct { font-size: 12px; color: var(--muted); }
+
+  .line-items { border-top: 0.5px solid var(--border); padding-top: 10px; }
+  .line-item { display: flex; align-items: center; gap-left: 0; margin-bottom: 6px; }
+  .line-item-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .line-name {
+    font-size: 13px;
+    color: var(--charcoal);
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    padding: 4px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .line-name:focus { border-bottom-color: var(--green); }
+  .line-amount {
+    font-size: 13px;
+    color: var(--charcoal);
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 80px;
+    text-align: right;
+    padding: 4px 0;
+    border-bottom: 0.5px solid var(--border);
+    -moz-appearance: textfield;
+  }
+  .line-amount::-webkit-outer-spin-button,
+  .line-amount::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .line-amount:focus { border-bottom-color: var(--green); }
+  .line-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--border);
+    padding: 0 4px;
+    line-height: 1;
+    transition: color .2s;
+  }
+  .line-del:hover { color: var(--coral); }
+  .add-btn {
+    background: none;
+    border: 0.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+    transition: border-color .2s, color .2s;
+    text-align: left;
+  }
+  .add-btn:hover { border-color: var(--green); color: var(--green); }
+
+  .remaining-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0 0; margin-top: 6px; border-top: 0.5px solid var(--border); }
+  .remaining-label { font-size: 12px; color: var(--muted); }
+  .remaining-val { font-size: 13px; font-weight: 600; }
+  .over { color: var(--coral); }
+  .under { color: var(--green); }
+
+  .summary-card {
+    background: var(--green);
+    color: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  .summary-card h3 { font-size: 13px; opacity: .75; margin-bottom: 12px; font-weight: 500; }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sum-item { text-align: center; }
+  .sum-val { font-size: 20px; font-weight: 700; display: block; }
+  .sum-lbl { font-size: 11px; opacity: .7; }
+
+  .print-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 12px;
+    background: var(--white);
+    color: var(--green);
+    border: 0.5px solid var(--green);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background .2s;
+  }
+  .print-btn:hover { background: var(--green-light); }
+
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 1.5rem; }
+  .footer-note a { color: var(--green); text-decoration: none; }
+
+  @media print {
+    .add-btn, .line-del, .print-btn { display: none; }
+    body { background: white; }
+    header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌱 Sprout Money</div>
+  <h1>50 / 30 / 20 Budget Template</h1>
+  <p>Enter your monthly take-home pay and fill in your expenses. We'll do the maths.</p>
+</header>
+
+<div class="container">
+
+  <div class="income-card">
+    <label>Monthly take-home income (after tax)</label>
+    <div class="income-input-row">
+      <span class="currency">€</span>
+      <input type="number" id="income" placeholder="2500" min="0" value="">
+    </div>
+    <div class="income-note">Use your net pay — what actually lands in your account each month.</div>
+  </div>
+
+  <div class="bar-visual">
+    <div class="bar-label-row">
+      <span class="bar-label" style="color:var(--needs-col)">Needs 50%</span>
+      <span class="bar-label" style="color:var(--wants-col)">Wants 30%</span>
+      <span class="bar-label" style="color:var(--savings-col)">Future 20%</span>
+    </div>
+    <div class="bar-track">
+      <div class="bar-seg" id="bar-needs" style="background:var(--needs-col);width:50%"></div>
+      <div class="bar-seg" id="bar-wants" style="background:var(--wants-col);width:30%"></div>
+      <div class="bar-seg" id="bar-savings" style="background:var(--savings-col);width:20%"></div>
+    </div>
+    <div class="bar-legend">
+      <div class="bar-leg-item"><div class="bar-dot" style="background:var(--needs-col)"></div><span>Needs — <strong id="needs-alloc">€0</strong></span></div>
+      <div class="bar-leg-item"><div class="bar-dot" style="background:var(--wants-col)"></div><span>Wants — <strong id="wants-alloc">€0</strong></span></div>
+      <div class="bar-leg-item"><div class="bar-dot" style="background:var(--savings-col)"></div><span>Future — <strong id="savings-alloc">€0</strong></span></div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-badge badge-needs">Needs — 50%</span>
+    <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">Things you must pay</span>
+  </div>
+
+  <div class="alloc-card">
+    <div class="alloc-header">
+      <div>
+        <div class="alloc-name">Needs total</div>
+        <div class="alloc-pct">Rent, bills, groceries, transport, insurance</div>
+      </div>
+      <div style="text-align:right">
+        <div class="alloc-amount" id="needs-total" style="color:var(--needs-col)">€0</div>
+        <div class="alloc-pct" id="needs-target">Target: €0</div>
+      </div>
+    </div>
+    <div class="line-items" id="needs-items"></div>
+    <button class="add-btn" onclick="addLine('needs')">+ Add expense</button>
+    <div class="remaining-row">
+      <span class="remaining-label">Remaining in budget</span>
+      <span class="remaining-val" id="needs-remaining">€0</span>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-badge badge-wants">Wants — 30%</span>
+    <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">Things you enjoy</span>
+  </div>
+
+  <div class="alloc-card">
+    <div class="alloc-header">
+      <div>
+        <div class="alloc-name">Wants total</div>
+        <div class="alloc-pct">Eating out, subscriptions, hobbies, shopping</div>
+      </div>
+      <div style="text-align:right">
+        <div class="alloc-amount" id="wants-total" style="color:var(--wants-col)">€0</div>
+        <div class="alloc-pct" id="wants-target">Target: €0</div>
+      </div>
+    </div>
+    <div class="line-items" id="wants-items"></div>
+    <button class="add-btn" onclick="addLine('wants')">+ Add expense</button>
+    <div class="remaining-row">
+      <span class="remaining-label">Remaining in budget</span>
+      <span class="remaining-val" id="wants-remaining">€0</span>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-badge badge-savings">Future you — 20%</span>
+    <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">Savings, investments, debt repayment</span>
+  </div>
+
+  <div class="alloc-card">
+    <div class="alloc-header">
+      <div>
+        <div class="alloc-name">Future total</div>
+        <div class="alloc-pct">Emergency fund, savings, investing, extra debt payments</div>
+      </div>
+      <div style="text-align:right">
+        <div class="alloc-amount" id="savings-total" style="color:var(--savings-col)">€0</div>
+        <div class="alloc-pct" id="savings-target">Target: €0</div>
+      </div>
+    </div>
+    <div class="line-items" id="savings-items"></div>
+    <button class="add-btn" onclick="addLine('savings')">+ Add item</button>
+    <div class="remaining-row">
+      <span class="remaining-label">Remaining in budget</span>
+      <span class="remaining-val" id="savings-remaining">€0</span>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <h3>Monthly summary</h3>
+    <div class="summary-grid">
+      <div class="sum-item">
+        <span class="sum-val" id="sum-income">€0</span>
+        <span class="sum-lbl">Income</span>
+      </div>
+      <div class="sum-item">
+        <span class="sum-val" id="sum-spent">€0</span>
+        <span class="sum-lbl">Allocated</span>
+      </div>
+      <div class="sum-item">
+        <span class="sum-val" id="sum-left">€0</span>
+        <span class="sum-lbl">Unallocated</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">Print or save as PDF</button>
+
+  <div class="footer-note">
+    Made by <a href="#">Sprout Money</a> · No data is stored. Everything stays on your device. · Not financial advice.
+  </div>
+
+</div>
+
+<script>
+const defaults = {
+  needs: ['Rent / mortgage', 'Electricity & gas', 'Groceries', 'Transport', 'Phone bill', 'Insurance'],
+  wants: ['Eating out', 'Streaming services', 'Hobbies', 'Shopping'],
+  savings: ['Emergency fund', 'Savings account', 'Investments']
+};
+
+function fmt(n) { return '€' + Math.round(n).toLocaleString('en-IE'); }
+
+function addLine(cat, name='', val='') {
+  const container = document.getElementById(cat + '-items');
+  const id = Date.now();
+  const row = document.createElement('div');
+  row.className = 'line-item-row';
+  row.dataset.cat = cat;
+  row.dataset.id = id;
+  row.innerHTML = `
+    <input class="line-name" type="text" placeholder="e.g. Rent" value="${name}" oninput="recalc()">
+    <input class="line-amount" type="number" placeholder="0" value="${val}" min="0" oninput="recalc()">
+    <button class="line-del" onclick="this.parentElement.remove();recalc()">×</button>
+  `;
+  container.appendChild(row);
+  recalc();
+}
+
+function getLines(cat) {
+  let total = 0;
+  document.querySelectorAll(`#${cat}-items .line-item-row`).forEach(row => {
+    const v = parseFloat(row.querySelector('.line-amount').value) || 0;
+    total += v;
+  });
+  return total;
+}
+
+function recalc() {
+  const income = parseFloat(document.getElementById('income').value) || 0;
+  const needsTarget = income * 0.5;
+  const wantsTarget = income * 0.3;
+  const savingsTarget = income * 0.2;
+
+  document.getElementById('needs-alloc').textContent = fmt(needsTarget);
+  document.getElementById('wants-alloc').textContent = fmt(wantsTarget);
+  document.getElementById('savings-alloc').textContent = fmt(savingsTarget);
+
+  document.getElementById('needs-target').textContent = 'Target: ' + fmt(needsTarget);
+  document.getElementById('wants-target').textContent = 'Target: ' + fmt(wantsTarget);
+  document.getElementById('savings-target').textContent = 'Target: ' + fmt(savingsTarget);
+
+  const needsSpent = getLines('needs');
+  const wantsSpent = getLines('wants');
+  const savingsSpent = getLines('savings');
+
+  document.getElementById('needs-total').textContent = fmt(needsSpent);
+  document.getElementById('wants-total').textContent = fmt(wantsSpent);
+  document.getElementById('savings-total').textContent = fmt(savingsSpent);
+
+  const setRemaining = (id, target, spent) => {
+    const el = document.getElementById(id);
+    const diff = target - spent;
+    el.textContent = fmt(Math.abs(diff));
+    el.className = 'remaining-val ' + (diff < 0 ? 'over' : 'under');
+    if (diff < 0) el.textContent = '-' + el.textContent + ' over';
+  };
+  setRemaining('needs-remaining', needsTarget, needsSpent);
+  setRemaining('wants-remaining', wantsTarget, wantsSpent);
+  setRemaining('savings-remaining', savingsTarget, savingsSpent);
+
+  const totalSpent = needsSpent + wantsSpent + savingsSpent;
+  document.getElementById('sum-income').textContent = fmt(income);
+  document.getElementById('sum-spent').textContent = fmt(totalSpent);
+  document.getElementById('sum-left').textContent = fmt(income - totalSpent);
+
+  const totalPct = income > 0 ? totalSpent / income * 100 : 0;
+  const needsPct = income > 0 ? needsSpent / income * 100 : 50;
+  const wantsPct = income > 0 ? wantsSpent / income * 100 : 30;
+  const savingsPct = income > 0 ? savingsSpent / income * 100 : 20;
+  document.getElementById('bar-needs').style.width = Math.min(needsPct, 100) + '%';
+  document.getElementById('bar-wants').style.width = Math.min(wantsPct, 100 - Math.min(needsPct,100)) + '%';
+  document.getElementById('bar-savings').style.width = Math.min(savingsPct, 100 - Math.min(needsPct,100) - Math.min(wantsPct,100-Math.min(needsPct,100))) + '%';
+}
+
+defaults.needs.forEach(n => addLine('needs', n, ''));
+defaults.wants.forEach(n => addLine('wants', n, ''));
+defaults.savings.forEach(n => addLine('savings', n, ''));
+
+document.getElementById('income').addEventListener('input', recalc);
+recalc();
+</script>
+</body>
+</html>

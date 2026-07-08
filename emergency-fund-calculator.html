@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Fund Calculator — Sprout Money</title>
+<style>
+  :root {
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --cream: #FAFAF6;
+    --charcoal: #2C2C2A;
+    --muted: #6B6B68;
+    --border: #E4E2D9;
+    --white: #FFFFFF;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--cream); color: var(--charcoal); }
+
+  header { background: var(--green); color: white; padding: 2rem 1.5rem 1.5rem; text-align: center; }
+  .logo { font-size: 13px; letter-spacing: .08em; opacity: .7; margin-bottom: 6px; text-transform: uppercase; }
+  header h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  header p { font-size: 14px; opacity: .8; max-width: 420px; margin: 0 auto; }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .card { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+
+  .field-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 4px; }
+  .field-hint { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+  .input-row:last-child { margin-bottom: 0; }
+  .currency-sym { font-size: 18px; font-weight: 500; color: var(--green); min-width: 16px; }
+  .input-row input[type="number"] {
+    font-size: 20px; font-weight: 600; color: var(--charcoal);
+    border: none; border-bottom: 1.5px solid var(--border);
+    background: transparent; outline: none; width: 100%;
+    padding: 4px 0; transition: border-color .2s;
+    -moz-appearance: textfield;
+  }
+  .input-row input::-webkit-outer-spin-button,
+  .input-row input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .input-row input:focus { border-bottom-color: var(--green); }
+
+  .seg-control { display: flex; gap: 4px; margin-bottom: 1rem; }
+  .seg-btn {
+    flex: 1; padding: 8px 4px; border: 0.5px solid var(--border);
+    background: var(--white); border-radius: 6px; font-size: 12px;
+    font-weight: 600; color: var(--muted); cursor: pointer; text-align: center;
+    transition: all .15s;
+  }
+  .seg-btn.active { background: var(--green); color: white; border-color: var(--green); }
+
+  .risk-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .risk-chip {
+    padding: 6px 12px; border: 0.5px solid var(--border);
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+    color: var(--muted); cursor: pointer; transition: all .15s; background: var(--white);
+  }
+  .risk-chip.active { border-color: var(--green); color: var(--green); background: var(--green-light); }
+
+  .result-card {
+    background: var(--green);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .result-label { font-size: 12px; opacity: .75; margin-bottom: 4px; letter-spacing: .04em; text-transform: uppercase; }
+  .result-range { font-size: 32px; font-weight: 700; margin-bottom: 4px; }
+  .result-sub { font-size: 13px; opacity: .8; }
+
+  .progress-section { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .progress-section h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .progress-label-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .progress-track { height: 12px; border-radius: 6px; background: var(--border); overflow: hidden; margin-bottom: 8px; }
+  .progress-fill { height: 100%; border-radius: 6px; transition: width .5s ease; background: var(--green); }
+  .progress-pct { font-size: 22px; font-weight: 700; color: var(--green); }
+  .progress-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .monthly-section { background: var(--white); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .monthly-section h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .monthly-slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .monthly-slider-row input[type=range] { flex: 1; accent-color: var(--green); }
+  .monthly-val { font-size: 16px; font-weight: 700; color: var(--green); min-width: 60px; text-align: right; }
+  .timeline-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .timeline-item { background: var(--green-light); border-radius: 8px; padding: 12px; text-align: center; }
+  .timeline-months { font-size: 22px; font-weight: 700; color: var(--green); }
+  .timeline-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .tips-card { background: var(--amber-light); border: 0.5px solid #EFC47A; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .tips-card h3 { font-size: 13px; font-weight: 700; color: var(--amber); margin-bottom: 10px; }
+  .tip-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: var(--charcoal); line-height: 1.5; }
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); margin-top: 7px; flex-shrink: 0; }
+
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 1.5rem; }
+  .footer-note a { color: var(--green); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌱 Sprout Money</div>
+  <h1>Emergency Fund Calculator</h1>
+  <p>Find out exactly how much you need — and how long it'll take to get there.</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <span class="field-label">Monthly essential expenses</span>
+    <div class="field-hint">Add up rent, food, bills, transport, insurance — the things you must pay every month.</div>
+    <div class="input-row">
+      <span class="currency-sym">€</span>
+      <input type="number" id="expenses" placeholder="1800" min="0" oninput="recalc()">
+    </div>
+
+    <span class="field-label">Your job situation</span>
+    <div class="field-hint">This affects how many months you should aim to cover.</div>
+    <div class="seg-control" id="job-seg">
+      <button class="seg-btn active" data-val="employed" onclick="setJob(this)">Employed</button>
+      <button class="seg-btn" data-val="self" onclick="setJob(this)">Self-employed</button>
+      <button class="seg-btn" data-val="variable" onclick="setJob(this)">Variable income</button>
+    </div>
+
+    <span class="field-label">How stable is your income?</span>
+    <div class="risk-row" id="risk-chips">
+      <div class="risk-chip active" data-val="stable" onclick="setRisk(this)">Very stable</div>
+      <div class="risk-chip" data-val="moderate" onclick="setRisk(this)">Fairly stable</div>
+      <div class="risk-chip" data-val="unstable" onclick="setRisk(this)">Uncertain</div>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <div class="result-label">Your recommended emergency fund</div>
+    <div class="result-range" id="result-range">€0 — €0</div>
+    <div class="result-sub" id="result-sub">Covers 3–6 months of essential expenses</div>
+  </div>
+
+  <div class="progress-section">
+    <h3>How far along are you?</h3>
+    <span class="field-label" style="margin-bottom:4px">Current savings set aside for emergencies</span>
+    <div class="input-row" style="margin-bottom:12px">
+      <span class="currency-sym">€</span>
+      <input type="number" id="current" placeholder="0" min="0" oninput="recalc()">
+    </div>
+    <div class="progress-label-row">
+      <span>€0</span>
+      <span id="progress-target-label">€0 target</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progress-pct">0%</div>
+    <div class="progress-note" id="progress-note">Enter your current savings above to see your progress.</div>
+  </div>
+
+  <div class="monthly-section">
+    <h3>How long will it take?</h3>
+    <div class="monthly-slider-row">
+      <span style="font-size:13px;color:var(--muted)">Saving per month</span>
+      <input type="range" id="monthly-save" min="10" max="1000" step="10" value="100" oninput="recalc()">
+      <span class="monthly-val" id="monthly-val">€100</span>
+    </div>
+    <div class="timeline-grid">
+      <div class="timeline-item">
+        <div class="timeline-months" id="tl-min">—</div>
+        <div class="timeline-label">To minimum goal</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-months" id="tl-mid">—</div>
+        <div class="timeline-label">To mid-range goal</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-months" id="tl-max">—</div>
+        <div class="timeline-label">To full goal</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-card" id="tips-card">
+    <h3>Tips for your situation</h3>
+    <div id="tips-content"></div>
+  </div>
+
+  <div class="footer-note">
+    Made by <a href="#">Sprout Money</a> · No data stored. Everything stays on your device. · Not financial advice.
+  </div>
+
+</div>
+
+<script>
+let jobType = 'employed';
+let riskLevel = 'stable';
+
+const monthRanges = {
+  employed: { stable: [3,4], moderate: [4,5], unstable: [5,6] },
+  self:     { stable: [4,6], moderate: [5,7], unstable: [6,9] },
+  variable: { stable: [4,6], moderate: [6,8], unstable: [6,12] }
+};
+
+const tips = {
+  employed: {
+    stable: ["Keep your emergency fund in a high-yield savings account — it should be accessible but separate from your main account.", "Once you hit your target, redirect that monthly saving into investments.", "Automate a transfer on payday so the money moves before you can spend it."],
+    moderate: ["Aim for the higher end of your range since your income has some variability.", "Review your fund every 6 months and top it up if your expenses have grown.", "Consider a notice savings account — slightly less accessible, usually better rates."],
+    unstable: ["Prioritise building your emergency fund before investing — it's your financial shock absorber.", "Even €50 a month adds up faster than it feels. Start small and increase as you can.", "Keep the fund in an easy-access savings account, not locked away."]
+  },
+  self: {
+    stable: ["As a self-employed person, your tax bill is an emergency too — keep a separate pot for that.", "Aim for the higher end of your range — client payments can be delayed unexpectedly.", "Consider a business account and a personal emergency fund as two separate pots."],
+    moderate: ["Irregular income means you'll save more some months than others — that's fine. Average it out over 3 months.", "If you have a good month, top up your emergency fund first before lifestyle spending.", "Track your average monthly income over the last 6 months for a realistic base figure."],
+    unstable: ["Your emergency fund is non-negotiable. It's what keeps you from taking bad work just because you're desperate.", "Save a percentage of every invoice, not a fixed monthly amount — this scales with your income naturally.", "Aim for the full 9–12 month range before investing anything."]
+  },
+  variable: {
+    stable: ["Variable income makes an emergency fund even more important — it smooths out the low-income months.", "Set your target based on your lowest typical monthly income, not your average.", "Automate transfers on high-income months to catch up on low ones."],
+    moderate: ["Build your emergency fund based on your worst 3-month stretch in the last year.", "Zero-based budgeting works well with variable income — allocate every euro as it arrives.", "Keep 1–2 months extra as a buffer for income gaps specifically."],
+    unstable: ["Before anything else — emergency fund. It's the only thing that gives you options when income dips.", "Save a fixed percentage (20–30%) of every payment as it comes in.", "Review your target amount every quarter as your expenses change."]
+  }
+};
+
+function setJob(btn) {
+  document.querySelectorAll('#job-seg .seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  jobType = btn.dataset.val;
+  recalc();
+}
+
+function setRisk(chip) {
+  document.querySelectorAll('#risk-chips .risk-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  riskLevel = chip.dataset.val;
+  recalc();
+}
+
+function fmt(n) { return '€' + Math.round(n).toLocaleString('en-IE'); }
+function fmtMonths(m) {
+  if (!isFinite(m) || m <= 0) return '—';
+  if (m < 1) return '< 1 mo';
+  if (m < 12) return Math.ceil(m) + ' mo';
+  const y = Math.floor(m / 12);
+  const mo = Math.ceil(m % 12);
+  return mo > 0 ? y + 'y ' + mo + 'mo' : y + ' yr';
+}
+
+function recalc() {
+  const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+  const current = parseFloat(document.getElementById('current').value) || 0;
+  const monthly = parseFloat(document.getElementById('monthly-save').value) || 100;
+
+  document.getElementById('monthly-val').textContent = fmt(monthly);
+
+  const range = monthRanges[jobType][riskLevel];
+  const minGoal = expenses * range[0];
+  const maxGoal = expenses * range[1];
+  const midGoal = (minGoal + maxGoal) / 2;
+
+  document.getElementById('result-range').textContent = fmt(minGoal) + ' — ' + fmt(maxGoal);
+  document.getElementById('result-sub').textContent = `Covers ${range[0]}–${range[1]} months of your essential expenses`;
+
+  const pct = maxGoal > 0 ? Math.min(current / maxGoal * 100, 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+  document.getElementById('progress-target-label').textContent = fmt(maxGoal) + ' target';
+
+  if (current >= maxGoal && maxGoal > 0) {
+    document.getElementById('progress-note').textContent = "You've hit your full emergency fund target.";
+  } else if (current >= minGoal && maxGoal > 0) {
+    document.getElementById('progress-note').textContent = `You've hit your minimum target. ${fmt(maxGoal - current)} left to reach the full goal.`;
+  } else if (current > 0) {
+    document.getElementById('progress-note').textContent = `${fmt(minGoal - current)} to go before you hit your minimum target.`;
+  } else {
+    document.getElementById('progress-note').textContent = 'Enter your current savings above to see your progress.';
+  }
+
+  const remaining_min = Math.max(0, minGoal - current);
+  const remaining_mid = Math.max(0, midGoal - current);
+  const remaining_max = Math.max(0, maxGoal - current);
+
+  document.getElementById('tl-min').textContent = monthly > 0 ? fmtMonths(remaining_min / monthly) : '—';
+  document.getElementById('tl-mid').textContent = monthly > 0 ? fmtMonths(remaining_mid / monthly) : '—';
+  document.getElementById('tl-max').textContent = monthly > 0 ? fmtMonths(remaining_max / monthly) : '—';
+
+  const tipList = tips[jobType][riskLevel];
+  document.getElementById('tips-content').innerHTML = tipList.map(t =>
+    `<div class="tip-item"><div class="tip-dot"></div><span>${t}</span></div>`
+  ).join('');
+}
+
+recalc();
+</script>
+</body>
+</html>
